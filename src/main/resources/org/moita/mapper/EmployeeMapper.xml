@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moita.mapper.EmployeeMapper">
+
+    <sql id="select">
+        SELECT id, name, skill
+        FROM employee e
+        JOIN skill s
+        ON e.id = s.employee_id
+    </sql>
+
+    <select id="findEmployeeById" resultType="org.moita.domain.Employee">
+        <include refid="select"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="findEmployeeByName" resultType="org.moita.domain.Employee">
+        <include refid="select"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="findAll" resultType="org.moita.domain.Employee">
+        <include refid="select"/>
+    </select>
+
+    <!--Example where columns does not match class fields -->
+    <resultMap id="employeeResultMap" type="org.moita.domain.Employee">
+        <id property="id" column="employee_id" />
+        <result property="name" column="employee_name"/>
+        <result property="company" column="company_name"/>
+    </resultMap>
+
+</mapper>

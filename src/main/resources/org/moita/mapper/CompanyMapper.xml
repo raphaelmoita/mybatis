@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moita.mapper.CompanyMapper">
+
+    <sql id="select">
+        SELECT c.id as company_id,
+               c.name as company_name,
+               e.id as employee_id,
+               e.name as employee_name,
+               s.description as skill
+        FROM company c
+        JOIN employee e
+        ON c.id = e.company_id
+        JOIN skill s
+        ON s.employee_id = e.id
+    </sql>
+
+    <select id="findCompanyById" resultMap="companyResultMap">
+        <include refid="select"/>
+        WHERE e.id = #{id}
+    </select>
+
+    <select id="findCompanyByName" resultMap="companyResultMap">
+        <include refid="select"/>
+        WHERE e.name = #{name}
+    </select>
+
+    <select id="findAll" resultMap="companyResultMap">
+        <include refid="select"/>
+    </select>
+
+    <!--Example where columns does not match class fields -->
+    <resultMap id="companyResultMap" type="org.moita.domain.Company">
+        <id property="id" column="company_id" />
+        <result property="name" column="company_name"/>
+        <collection property="employees" javaType="ArrayList"
+                    resultMap="employeeResultMap"/>
+    </resultMap>
+
+    <resultMap id="employeeResultMap" type="org.moita.domain.Employee">
+        <id property="id" column="employee_id" />
+        <result property="name" column="employee_name"/>
+        <result property="companyId" column="company_id"/>
+        <collection property="skills" javaType="ArrayList" column="skill" ofType="org.moita.domain.Skill"/>
+    </resultMap>
+
+</mapper>
