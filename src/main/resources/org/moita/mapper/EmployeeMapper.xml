@@ -3,7 +3,10 @@
 <mapper namespace="org.moita.mapper.EmployeeMapper">
 
     <sql id="select">
-        SELECT id, name, skill
+        SELECT e.id AS employee_id,
+               e.name AS employee_name,
+               e.company_id AS company_id,
+               s.description AS skill
         FROM employee e
         JOIN skill s
         ON e.id = s.employee_id
@@ -19,15 +22,19 @@
         WHERE name = #{name}
     </select>
 
-    <select id="findAll" resultType="org.moita.domain.Employee">
+    <select id="findAll" resultMap="employeeResultMap">
         <include refid="select"/>
     </select>
 
-    <!--Example where columns does not match class fields -->
     <resultMap id="employeeResultMap" type="org.moita.domain.Employee">
         <id property="id" column="employee_id" />
+        <result property="companyId" column="company_id"/>
         <result property="name" column="employee_name"/>
-        <result property="company" column="company_name"/>
+        <collection property="skills"
+                    javaType="java.util.List"
+                    ofType="org.moita.domain.Skill">
+            <result column="skill"/> <!-- https://github.com/mybatis/mybatis-3/issues/1091 -->
+        </collection>
     </resultMap>
 
 </mapper>

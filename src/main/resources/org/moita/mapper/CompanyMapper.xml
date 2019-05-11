@@ -3,11 +3,11 @@
 <mapper namespace="org.moita.mapper.CompanyMapper">
 
     <sql id="select">
-        SELECT c.id as company_id,
-               c.name as company_name,
-               e.id as employee_id,
-               e.name as employee_name,
-               s.description as skill
+        SELECT c.id AS company_id,
+               c.name AS company_name,
+               e.id AS employee_id,
+               e.name AS employee_name,
+               s.description AS skill
         FROM company c
         JOIN employee e
         ON c.id = e.company_id
@@ -33,15 +33,9 @@
     <resultMap id="companyResultMap" type="org.moita.domain.Company">
         <id property="id" column="company_id" />
         <result property="name" column="company_name"/>
-        <collection property="employees" javaType="ArrayList"
-                    resultMap="employeeResultMap"/>
-    </resultMap>
-
-    <resultMap id="employeeResultMap" type="org.moita.domain.Employee">
-        <id property="id" column="employee_id" />
-        <result property="name" column="employee_name"/>
-        <result property="companyId" column="company_id"/>
-        <collection property="skills" javaType="ArrayList" column="skill" ofType="org.moita.domain.Skill"/>
+        <collection property="employees"
+                    javaType="java.util.List"
+                    resultMap="org.moita.mapper.EmployeeMapper.employeeResultMap"/>
     </resultMap>
 
 </mapper>
